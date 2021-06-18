@@ -1,0 +1,28 @@
+{
+  "name": "comely-io/security",
+  "description": "Security Component for PHP Apps",
+  "type": "library",
+  "homepage": "https://github.com/comely-io/security",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Furqan A. Siddiqui",
+      "email": "hello@furqansiddiqui.com",
+      "homepage": "https://www.furqansiddiqui.com",
+      "role": "Author"
+    }
+  ],
+  "require": {
+    "php": "^8.0",
+    "ext-openssl": "*",
+    "comely-io/buffer-php": "^0.1.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Comely\\Security\\": [
+        "src"
+      ]
+    }
+  },
+  "minimum-stability": "dev"
+}
