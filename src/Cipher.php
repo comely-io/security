@@ -49,6 +49,10 @@ class Cipher
 
         // Check key length
         preg_match('/-[0-9]+-/', $cipher, $matches);
+        if (!$matches) {
+            throw new CipherException(sprintf('Unsupported cipher "%s"', $this->cipher));
+        }
+
         $reqLen = intval(trim($matches[0], "-")) / 8;
         if (strlen($this->key) !== $reqLen) {
             throw new CipherException(
@@ -68,6 +72,24 @@ class Cipher
             "cipher" => $this->cipher,
             "key" => sprintf("%d-bit secret key", strlen($this->key) * 8),
         ];
+    }
+
+    /**
+     * Creates a new Cipher instance using a remixed key with deterministic phrase/key in argument
+     * @param string $key
+     * @param int $iterations
+     * @return $this
+     * @throws CipherException
+     */
+    public function remixChild(string $key, int $iterations = 1): static
+    {
+        $algo = match (strlen($this->key)) {
+            32 => "sha256",
+            16 => "sha1",
+            default => throw new CipherException('Cannot remix a %d-bit secret key cipher', strlen($this->key) * 8)
+        };
+
+        return new self($this->pbkdf2($algo, $key, $iterations));
     }
 
     /**
