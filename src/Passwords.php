@@ -23,10 +23,11 @@ class Passwords
     /**
      * Generates a random password from ASCII table indexes 33 to 126
      * @param int $length
+     * @param bool $allowQuotes
      * @param int|null $minimumScore
      * @return string
      */
-    public static function Random(int $length = 12, ?int $minimumScore = 4): string
+    public static function Random(int $length = 12, bool $allowQuotes = false, ?int $minimumScore = 4): string
     {
         if ($length < 0) {
             throw new \LengthException('Invalid password length');
@@ -34,11 +35,16 @@ class Passwords
 
         $password = "";
         while (strlen($password) < $length) {
-            $password .= chr(mt_rand(33, 126));
+            $ord = mt_rand(33, 126);
+            if (!$allowQuotes && in_array($ord, [34, 39, 44, 96])) {
+                continue;
+            }
+
+            $password .= chr($ord);
         }
 
         if (is_int($minimumScore) && $minimumScore > self::Strength($password)) {
-            return self::Random($length, $minimumScore); // Retry
+            return self::Random($length, $allowQuotes, $minimumScore); // Retry
         }
 
         return $password;
