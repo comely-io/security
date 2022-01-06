@@ -180,7 +180,7 @@ class Cipher
             throw new CipherException('Hash PBKDF2 algorithm not available');
         }
 
-        $digest = hash_pbkdf2($algo, $data, $this->key->raw(), $iterations, 0, true);
+        $digest = hash_pbkdf2($algo, $data, $this->key, $iterations, 0, true);
         if (!$digest) {
             throw new CipherException('Failed to compute PBKDF2');
         }
